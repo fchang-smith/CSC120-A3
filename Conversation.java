@@ -4,6 +4,15 @@ import java.util.Scanner;
  * @author CSC120: Section3 Feiran Chang
  */
 class Conversation {
+  /**
+   * The chatbot will always say "Hi there! What's on your mind?" to begin a chat
+   * And "See ya!" to end a chat
+   * If the user types pronounces and other key words that can be mirrored,
+   * The chatbot will return a mirrored version (a period will also be replaced by a question mark).
+   * If the user types something that cannot be mirrored
+   * the chatbot will return "Mmm-hm" 
+   * @param arguments
+   */
   public static void main(String[] arguments) {
     // You will start the conversation here.
 
@@ -14,14 +23,11 @@ class Conversation {
     reader.nextLine();
 
     int arraySize = 2 * rounds + 2;
-    System.out.println("arraySize: " + arraySize); //delete2
     String[] transcription = new String[arraySize];
 
     // Ask Hi there...
     System.out.println("Hi there! What's on your mind?");
     transcription[0] = ("Hi there! What's on your mind?");
-    System.out.println("transcription[0]: " + transcription[0]); //delete2
-
     // rounds(for loop)
     String input = "";
     String output = "";
@@ -29,17 +35,21 @@ class Conversation {
     for (int i = 0; i < rounds; i++) {
       input = reader.nextLine();
       transcription[2*i+1] = (input);
-      System.out.println("i:" + (i+1)); //delete
-      output = mirrorWord(input);
-      if (output.equals(input)) {
+      System.out.println("input: "+input);
+      Boolean checkMirror = checkMirror(input);
+      if (checkMirror) {
+        boolean checkPunc = isPunctuation(input);
+        output = mirrorWord(input);
+        if (checkPunc) {
+          output += "?";
+        }
+      }
+      else {
         output = ("Mmm-hm");
       }
-      output = changePunctuatio(output);
+      output = capitalize(output);
       transcription[2*i+2] = output;
       System.out.println(output);
-      System.out.println("output:" + output); //delete
-      System.out.println("transcription[2*i]: " + i + transcription[2*i+1]); //delete2
-      System.out.println("transcription[2*i+1]: " + i+ transcription[2*i+2]); //delete2
     }
 
     //Ends: see al
@@ -65,19 +75,41 @@ class Conversation {
     int size = keyWord.length;
     for (int j = 0; j < splitWord.length; j++) {
       String split = splitWord[j];
-      System.out.println("split: " + j + split); //delete2
       for (int i = 0; i < size; i++) {
         String key = keyWord[i];
-        System.out.println("key: " + i + key); //delete2
         if (split.equals(key)) {
           String mirror = mirrorWord[i];
-          s = s.replace(split, mirror);
-          System.out.println("s replace: " + s); //delete2
+          splitWord[j] = mirror;
           break;
         }
       }
     }
+    s = arrayToString(splitWord);
     return s;
+  }
+    
+  /**
+   * check if a given string contains words needed to be mirrored
+   * @param s string that needs to be check
+   * @return T/F does the string need to be mirrored?
+   */
+  public static boolean checkMirror(String s) {
+    String[] splitWord = splitString(s);
+    int splitLen = splitWord.length;
+    boolean check = false;
+    String[] keyWord = new String[] {"I", "me", "am", "you", "my", "your", "are"};
+    int keyLen = keyWord.length;
+    for (int i =0; i<splitLen ; i++) {
+      String split = splitWord[i];
+      for (int j = 0; j < keyLen; j++) {
+        String key = keyWord[j];
+        if (split.equals(key)){
+        check =true;
+        break;
+        }
+      }
+    }
+    return check;
   }
 
   
@@ -90,11 +122,9 @@ class Conversation {
     String[] splitWord;
     if (s.contains(".")) {
       splitWord = s.split("[ .]", 0);
-      System.out.println("split size: " + splitWord.length); //delete2
-
     }
     else {
-      splitWord = s.split("", 0); 
+      splitWord = s.split(" ", 0); 
     }
     return splitWord;
   }
@@ -104,8 +134,37 @@ class Conversation {
  * @param s the string needs to be changed
  * @return the string has been changed
  */
-  public static String changePunctuatio(String s) {
-    s.replace(".", "?");
+  public static boolean isPunctuation(String s) {
+    boolean isPunctuation = false;
+    if (s.contains(".")) {
+      isPunctuation = true;
+    }
+    return isPunctuation;
+  }
+
+  /**
+   * capitalize the first letter 
+   * @param s the string needs to be capitalized
+   * @return a string that has been capitalized
+   */
+  public static String capitalize(String s) {
+    char firstChr = s.charAt(0);
+    char newChr = Character.toUpperCase(firstChr);
+    String newStr = newChr+s.substring(1);
+    return newStr;
+  }
+
+  /**
+   * convert a string array into string
+   * @param splitWord the string array needs to be converted
+   * @return the string comes from the string array
+   */
+  public static String arrayToString(String[] splitWord) {
+    String s = "";
+    for (int i = 0; i < (splitWord.length-1); i++) {
+      s = s + splitWord[i] + " ";
+    }
+    s += splitWord[(splitWord.length-1)];
     return s;
   }
 
