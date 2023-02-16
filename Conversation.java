@@ -35,7 +35,6 @@ class Conversation {
     for (int i = 0; i < rounds; i++) {
       input = reader.nextLine();
       transcription[2*i+1] = (input);
-      System.out.println("input: "+input);
       Boolean checkMirror = checkMirror(input);
       if (checkMirror) {
         boolean checkPunc = isPunctuation(input);

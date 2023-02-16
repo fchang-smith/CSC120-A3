@@ -1,7 +1,7 @@
 Use this file to record your reflection on this assignment.
 
 - Which classmates did you consult with while working on this assignment?
-Laura Lyu
+Laura Lyu, Andrea
 - Which session(s) of TA / office hours did you attend?
 The one on Tuesday evening
 - What are your initial impressions of Java? 
